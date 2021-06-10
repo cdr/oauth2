@@ -7,7 +7,6 @@ package internal
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -279,7 +278,7 @@ func doTokenRoundTrip(ctx context.Context, req *http.Request) (*Token, error) {
 		json.Unmarshal(body, &token.Raw) // no error checks for optional fields
 	}
 	if token.AccessToken == "" {
-		return nil, errors.New("oauth2: server response missing access_token")
+		return nil, fmt.Errorf("oauth2: server response missing access_token:\n\nParsed token: %+v\n\nResponse: %s", *token, body)
 	}
 	return token, nil
 }
